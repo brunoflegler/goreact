@@ -1,0 +1,17 @@
+.main-header {
+  height: 46px;
+  background: #4267b2;
+  position: relative;
+  z-index: 1;
+}
+
+.main-header .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  strong {
+    color: #ffffff;
+  }
+}

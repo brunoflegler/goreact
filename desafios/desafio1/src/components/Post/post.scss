@@ -1,0 +1,33 @@
+.wrapper-content {
+  margin-top: 25px;
+  max-width: 500px;
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    background: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.wrapper-content .post-profile {
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  padding-left: 10px;
+}
+
+.wrapper-content .post-description {
+  display: flex;
+  padding-top: 10px;
+
+  span {
+    font-weight: bold;
+    color: #444444;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
