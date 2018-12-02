@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import './postHeader.scss';
 
 const PostHeader = ({ post }) => (
@@ -10,5 +12,12 @@ const PostHeader = ({ post }) => (
     </div>
   </div>
 );
+
+PostHeader.propTypes = {
+  post: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default PostHeader;
