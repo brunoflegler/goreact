@@ -11,22 +11,34 @@ class Main extends Component {
   };
 
   static propTypes = {
-    addFavorites: PropTypes.func.isRequired,
-    favorites: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        description: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
+    addFavoriteRequest: PropTypes.func.isRequired,
+    favorites: PropTypes.shape({
+      loading: PropTypes.bool,
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          name: PropTypes.string.isRequired,
+          description: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }),
+      ),
+      error: PropTypes.oneOfType([PropTypes.string]),
+    }).isRequired,
   };
 
   handleAddRepository = (e) => {
     e.preventDefault();
 
-    const { addFavorites } = this.props;
+    const { addFavoriteRequest } = this.props;
+    const { repositoryInput } = this.state;
 
-    addFavorites();
+    if (!repositoryInput) return;
+
+    addFavoriteRequest(repositoryInput);
+
+    this.setState({
+      repositoryInput: '',
+    });
   };
 
   onChangeInput = (e) => {
@@ -50,10 +62,13 @@ class Main extends Component {
             onChange={this.onChangeInput}
           />
           <button type="submit">Adicionar</button>
+
+          {favorites.loading && <span>Carregando...</span>}
+          {!!favorites.error && <span style={{ color: '#F00' }}>{favorites.error}</span>}
         </form>
 
         <ul>
-          {favorites.map(f => (
+          {favorites.data.map(f => (
             <li key={f.id}>
               <p>
                 <strong>{f.name}</strong>

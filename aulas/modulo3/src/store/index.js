@@ -5,7 +5,9 @@ import sagas from './sagas';
 
 const middlewares = [];
 
-const sagaMiddleware = createSagaMiddlaware();
+const sagaMonitor = process.env.NODE_ENV === 'development' ? console.tron.createSagaMonitor() : null;
+
+const sagaMiddleware = createSagaMiddlaware({ sagaMonitor });
 
 middlewares.push(sagaMiddleware);
 
