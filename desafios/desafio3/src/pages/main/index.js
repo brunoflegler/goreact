@@ -1,9 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import MapGL, { Marker } from 'react-map-gl';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { IconMarker } from './styles';
+import Modal from 'react-modal';
+import { IconMarker, FormAdd, StyledModal } from './styles';
 
 import GitList from '../gitlist';
+import { Creators as GitListActions } from '../../store/ducks/gitlist';
+
+import { Creators as MainActions } from '../../store/ducks/main';
 
 class Main extends Component {
   state = {
@@ -14,20 +20,9 @@ class Main extends Component {
       longitude: -40.659312,
       zoom: 8,
     },
-    markers: [
-      {
-        id: 1,
-        latitude: -20.962143,
-        longitude: -40.759312,
-        url: 'https://avatars2.githubusercontent.com/u/2254731?v=4',
-      },
-      {
-        id: 2,
-        latitude: -20.362243,
-        longitude: -40.651312,
-        url: 'https://avatars2.githubusercontent.com/u/2254731?v=4',
-      },
-    ],
+    userGithub: '',
+    latitude: 0,
+    longitude: 0,
   };
 
   componentDidMount() {
@@ -56,11 +51,56 @@ class Main extends Component {
   };
 
   handleMapClick = (e) => {
-    console.log(e);
+    this.setState({
+      userGithub: '',
+    });
+
+    const [latitude, longitude] = e.lngLat;
+
+    this.setState({
+      latitude,
+      longitude,
+    });
+
+    this.handleOpenModal();
+  };
+
+  handleOpenModal = () => {
+    const { openModal } = this.props;
+    openModal();
+  };
+
+  handleCloseModal = () => {
+    const { closeModal } = this.props;
+    closeModal();
+  };
+
+  userGithubChange = (e) => {
+    e.preventDefault();
+
+    this.setState({
+      userGithub: e.target.value,
+    });
+  };
+
+  handleSearchGitHub = (e) => {
+    e.preventDefault();
+
+    const { userGithub, latitude, longitude } = this.state;
+    const { addGitListRequest } = this.props;
+
+    if (!userGithub) return;
+
+    addGitListRequest({
+      latitude,
+      longitude,
+      userGithub,
+    });
   };
 
   render() {
-    const { viewport, markers } = this.state;
+    const { viewport, userGithub } = this.state;
+    const { gitlist, main } = this.props;
 
     return (
       <Fragment>
@@ -73,16 +113,54 @@ class Main extends Component {
           mapStyle="mapbox://styles/mapbox/basic-v9"
           mapboxApiAccessToken="pk.eyJ1IjoiYnJ1bm9kYWxjb2wyOCIsImEiOiJjanBlNm8wdnMwYmNiM3JrMjVkbzRlMzBiIn0.eSKFw-AgDNk_3kutIPcqKg"
         >
-          {markers
-            && markers.map(m => (
+          {gitlist.data
+            && gitlist.data.map(m => (
               <Marker key={m.id} latitude={m.latitude} longitude={m.longitude}>
                 <IconMarker alt="marker" src={m.url} />
               </Marker>
             ))}
         </MapGL>
+
+        <Modal style={StyledModal} isOpen={main.modalIsOpen} onRequestClose={this.handleCloseModal}>
+          <FormAdd onSubmit={this.handleSearchGitHub}>
+            <h1>Adicionar novo usuário</h1>
+            <form>
+              <input
+                type="text"
+                placeholder="Usuário do GitHub"
+                value={userGithub}
+                onChange={this.userGithubChange}
+              />
+              <div>
+                <button onClick={this.handleCloseModal} className="btn-cancel" type="button">
+                  Cancelar
+                </button>
+                <button className="btn-save" type="submit">
+                  Salvar
+                </button>
+              </div>
+            </form>
+          </FormAdd>
+        </Modal>
       </Fragment>
     );
   }
 }
 
-export default Main;
+const mapStateToProps = state => ({
+  gitlist: state.gitlist,
+  main: state.main,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    ...GitListActions,
+    ...MainActions,
+  },
+  dispatch,
+);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Main);
