@@ -14,16 +14,10 @@ export const Types = {
 export const Creators = {
   openModal: () => ({
     type: Types.OPEN_MODAL,
-    // payload: {
-    //   modalIsOpen: true,
-    // },
   }),
 
   closeModal: () => ({
     type: Types.CLOSE_MODAL,
-    // payload: {
-    //   modalIsOpen: false,
-    // },
   }),
 };
 

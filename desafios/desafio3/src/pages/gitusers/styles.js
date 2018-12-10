@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const GitList = styled.ul`
+export const GitUsersList = styled.ul`
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -11,14 +11,25 @@ export const GitList = styled.ul`
   margin: 20px;
 `;
 
-export const GitItem = styled.li`
+export const ListEmpty = styled.span`
   display: flex;
+  justify-content: center;
+  color: #c0c0c0;
   padding: 10px;
+  margin: 10px;
+  font-size: 12px;
+  border-bottom: 1px solid #d3d3d3;
+`;
+
+export const GitUser = styled.li`
+  display: flex;
+  margin: 10px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #d3d3d3;
 
   img {
-    height: 48px;
-    width: 48px;
+    height: 38px;
+    width: 38px;
     border-radius: 100%;
   }
 `;
@@ -28,10 +39,11 @@ export const Profile = styled.div`
   flex-direction: column;
   margin-left: 10px;
   justify-content: center;
-  width: 100%;
+  width: 180px;
 
   h1 {
     font-size: 14px;
+    word-wrap: break-word;
   }
 
   span {

@@ -6,8 +6,9 @@ import { bindActionCreators } from 'redux';
 import Modal from 'react-modal';
 import { IconMarker, FormAdd, StyledModal } from './styles';
 
-import GitList from '../gitlist';
-import { Creators as GitListActions } from '../../store/ducks/gitlist';
+import GitUsers from '../gitusers';
+
+import { Creators as GitUsersActions } from '../../store/ducks/gitusers';
 
 import { Creators as MainActions } from '../../store/ducks/main';
 
@@ -55,7 +56,7 @@ class Main extends Component {
       userGithub: '',
     });
 
-    const [latitude, longitude] = e.lngLat;
+    const [longitude, latitude] = e.lngLat;
 
     this.setState({
       latitude,
@@ -87,11 +88,11 @@ class Main extends Component {
     e.preventDefault();
 
     const { userGithub, latitude, longitude } = this.state;
-    const { addGitListRequest } = this.props;
+    const { addGitUsersRequest } = this.props;
 
     if (!userGithub) return;
 
-    addGitListRequest({
+    addGitUsersRequest({
       latitude,
       longitude,
       userGithub,
@@ -100,11 +101,11 @@ class Main extends Component {
 
   render() {
     const { viewport, userGithub } = this.state;
-    const { gitlist, main } = this.props;
+    const { gitusers, main } = this.props;
 
     return (
       <Fragment>
-        <GitList />
+        <GitUsers />
         <MapGL
           {...viewport}
           onClick={this.handleMapClick}
@@ -113,15 +114,19 @@ class Main extends Component {
           mapStyle="mapbox://styles/mapbox/basic-v9"
           mapboxApiAccessToken="pk.eyJ1IjoiYnJ1bm9kYWxjb2wyOCIsImEiOiJjanBlNm8wdnMwYmNiM3JrMjVkbzRlMzBiIn0.eSKFw-AgDNk_3kutIPcqKg"
         >
-          {gitlist.data
-            && gitlist.data.map(m => (
-              <Marker key={m.id} latitude={m.latitude} longitude={m.longitude}>
-                <IconMarker alt="marker" src={m.url} />
-              </Marker>
-            ))}
+          {gitusers.data.map(m => (
+            <Marker key={m.id} latitude={m.latitude} longitude={m.longitude}>
+              <IconMarker alt="marker" src={m.url} />
+            </Marker>
+          ))}
         </MapGL>
 
-        <Modal style={StyledModal} isOpen={main.modalIsOpen} onRequestClose={this.handleCloseModal}>
+        <Modal
+          style={StyledModal}
+          ariaHideApp={false}
+          isOpen={main.modalIsOpen}
+          onRequestClose={this.handleCloseModal}
+        >
           <FormAdd onSubmit={this.handleSearchGitHub}>
             <h1>Adicionar novo usuário</h1>
             <form>
@@ -136,6 +141,7 @@ class Main extends Component {
                   Cancelar
                 </button>
                 <button className="btn-save" type="submit">
+                  {gitusers.loading && <i className="fa fa-spinner fa-spin" />}
                   Salvar
                 </button>
               </div>
@@ -148,13 +154,13 @@ class Main extends Component {
 }
 
 const mapStateToProps = state => ({
-  gitlist: state.gitlist,
+  gitusers: state.gitusers,
   main: state.main,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    ...GitListActions,
+    ...GitUsersActions,
     ...MainActions,
   },
   dispatch,

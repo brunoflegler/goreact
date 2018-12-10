@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 import './config/reactotron';
 import store from './store';
@@ -12,6 +13,7 @@ const App = () => (
     <Fragment>
       <GlobalStyle />
       <Routes />
+      <ToastContainer />
     </Fragment>
   </Provider>
 );
