@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { Creators as TodosActions } from "../../store/ducks/todos";
 
 const TodoList = ({ todos, addTodo }) => (
-  <Fragment>
+  <div>
     <ul>
       {todos.map(t => (
         <li key={t.id}>{t.title}</li>
@@ -19,7 +19,7 @@ const TodoList = ({ todos, addTodo }) => (
     >
       Adicionar Novo
     </button>
-  </Fragment>
+  </div>
 );
 
 const mapStateToProps = state => ({
